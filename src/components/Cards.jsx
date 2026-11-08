@@ -9,7 +9,7 @@ export function ProjectCard({ project, owner, views = 0, favorite, onFavorite, e
   return <article className="project-card">
     <ProjectVisual visual={project.visual} title={project.title} />
     <div className="project-card-body">
-      <div className="project-card-top"><span className="tag muted">{project.category}</span>{editable ? <button className="icon-button" aria-label={`Actions ${project.title}`}><MoreHorizontal size={19} /></button> : <button className={`icon-button ${favorite ? 'saved' : ''}`} onClick={onFavorite} aria-label="Ajouter aux favoris"><Bookmark size={18} fill={favorite ? 'currentColor' : 'none'} /></button>}</div>
+      <div className="project-card-top"><span className="tag muted">{project.category}</span>{editable ? <span className={`tag ${project.published ? 'accent' : 'muted'}`}>{project.published ? 'Publié' : 'Brouillon'}</span> : onFavorite && <button className={`icon-button ${favorite ? 'saved' : ''}`} onClick={onFavorite} aria-label="Ajouter aux favoris"><Bookmark size={18} fill={favorite ? 'currentColor' : 'none'} /></button>}</div>
       <Link to={`/projets/${project.id}`}><h3>{project.title}</h3></Link>
       <p>{project.description}</p>
       <div className="tech-list">{project.technologies.slice(0, 3).map((technology) => <span key={technology}>{technology}</span>)}</div>
