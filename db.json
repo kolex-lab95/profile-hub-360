@@ -1,0 +1,34 @@
+{
+  "users": [
+    { "id": "student-amel", "role": "student", "name": "Amel N'Diaye", "email": "amel@portfolio.demo", "password": "demo123", "title": "Développeuse Frontend & UX", "location": "Dakar, Sénégal", "bio": "Je transforme des problématiques concrètes en interfaces accessibles, vivantes et utiles.", "skills": ["React", "JavaScript", "Tailwind CSS", "Figma", "Node.js"], "availability": "Disponible pour une alternance", "avatar": "AN", "accent": "coral" },
+    { "id": "student-yann", "role": "student", "name": "Yann Kouamé", "email": "yann@portfolio.demo", "password": "demo123", "title": "Data Analyst & développeur Python", "location": "Abidjan, Côte d'Ivoire", "bio": "J'aime révéler les décisions qui se cachent dans les données et les rendre évidentes.", "skills": ["Python", "SQL", "Power BI", "React", "Pandas"], "availability": "Disponible dès juillet", "avatar": "YK", "accent": "jade" },
+    { "id": "student-sarah", "role": "student", "name": "Sarah Benali", "email": "sarah@portfolio.demo", "password": "demo123", "title": "Product Designer & développeuse UI", "location": "Casablanca, Maroc", "bio": "Je conçois des produits numériques inclusifs, où chaque détail a une intention.", "skills": ["Figma", "UI Design", "React", "Prototypage", "Design systems"], "availability": "À l'écoute d'opportunités", "avatar": "SB", "accent": "gold" },
+    { "id": "recruiter-elsa", "role": "recruiter", "name": "Elsa Martin", "email": "elsa@talent.demo", "password": "demo123", "title": "Talent Partner · NovaLabs", "location": "Dakar, Sénégal", "bio": "Je construis les équipes produit qui font avancer les idées ambitieuses.", "skills": [], "availability": "", "avatar": "EM", "accent": "blue" }
+  ],
+  "projects": [
+    { "id": "p-atelier", "ownerId": "student-amel", "title": "Atelier nomade", "description": "Plateforme de réservation d'ateliers créatifs pour reconnecter les quartiers à leurs artisans locaux.", "technologies": ["React", "Tailwind CSS", "Firebase"], "category": "Application web", "visual": "violet", "demoUrl": "https://example.com", "repoUrl": "https://github.com", "published": true, "createdAt": "2026-09-12T10:00:00.000Z", "updatedAt": "2026-10-29T09:10:00.000Z" },
+    { "id": "p-signal", "ownerId": "student-amel", "title": "Signal citoyen", "description": "Un espace simple pour signaler, suivre et visualiser les petits problèmes du quotidien urbain.", "technologies": ["React", "Leaflet", "Node.js"], "category": "Civic tech", "visual": "orange", "demoUrl": "https://example.com", "repoUrl": "https://github.com", "published": true, "createdAt": "2026-08-23T10:00:00.000Z", "updatedAt": "2026-10-20T11:30:00.000Z" },
+    { "id": "p-carnet", "ownerId": "student-amel", "title": "Carnet de terrain", "description": "Outil de prise de notes multimédia pensé pour les enquêtes de terrain et la recherche qualitative.", "technologies": ["React", "PWA", "IndexedDB"], "category": "Productivité", "visual": "jade", "demoUrl": "", "repoUrl": "https://github.com", "published": false, "createdAt": "2026-10-31T12:00:00.000Z", "updatedAt": "2026-10-31T12:00:00.000Z" },
+    { "id": "p-flux", "ownerId": "student-yann", "title": "Flux Commerce", "description": "Tableau de bord clair qui aide les commerces indépendants à comprendre leurs ventes, sans jargon.", "technologies": ["Python", "Power BI", "SQL"], "category": "Data visualisation", "visual": "blue", "demoUrl": "https://example.com", "repoUrl": "https://github.com", "published": true, "createdAt": "2026-09-02T10:00:00.000Z", "updatedAt": "2026-10-27T12:00:00.000Z" },
+    { "id": "p-sillage", "ownerId": "student-sarah", "title": "Sillage", "description": "Expérience mobile de découverte culturelle, dessinée pour éveiller la curiosité à chaque balade.", "technologies": ["Figma", "React", "Framer Motion"], "category": "Produit mobile", "visual": "pink", "demoUrl": "https://example.com", "repoUrl": "https://github.com", "published": true, "createdAt": "2026-08-07T10:00:00.000Z", "updatedAt": "2026-10-19T12:00:00.000Z" }
+  ],
+  "views": [
+    { "id": "v1", "studentId": "student-amel", "projectId": null, "viewerId": "recruiter-elsa", "viewedAt": "2026-10-05T09:00:00.000Z" },
+    { "id": "v2", "studentId": "student-amel", "projectId": "p-atelier", "viewerId": "recruiter-elsa", "viewedAt": "2026-10-07T09:00:00.000Z" },
+    { "id": "v3", "studentId": "student-amel", "projectId": "p-signal", "viewerId": "recruiter-elsa", "viewedAt": "2026-10-12T09:00:00.000Z" },
+    { "id": "v4", "studentId": "student-amel", "projectId": null, "viewerId": "recruiter-ana", "viewedAt": "2026-10-16T09:00:00.000Z" },
+    { "id": "v5", "studentId": "student-amel", "projectId": "p-atelier", "viewerId": "recruiter-ana", "viewedAt": "2026-10-18T09:00:00.000Z" },
+    { "id": "v6", "studentId": "student-amel", "projectId": "p-atelier", "viewerId": "recruiter-elsa", "viewedAt": "2026-10-24T09:00:00.000Z" },
+    { "id": "v7", "studentId": "student-amel", "projectId": "p-signal", "viewerId": "recruiter-jo", "viewedAt": "2026-10-28T09:00:00.000Z" },
+    { "id": "v8", "studentId": "student-yann", "projectId": "p-flux", "viewerId": "recruiter-elsa", "viewedAt": "2026-10-22T09:00:00.000Z" },
+    { "id": "v9", "studentId": "student-sarah", "projectId": "p-sillage", "viewerId": "recruiter-elsa", "viewedAt": "2026-10-30T09:00:00.000Z" }
+  ],
+  "favorites": [
+    { "id": "f1", "recruiterId": "recruiter-elsa", "kind": "student", "targetId": "student-yann", "createdAt": "2026-10-21T10:00:00.000Z" },
+    { "id": "f2", "recruiterId": "recruiter-elsa", "kind": "project", "targetId": "p-sillage", "createdAt": "2026-10-30T10:00:00.000Z" }
+  ],
+  "recentProfiles": [
+    { "id": "r1", "recruiterId": "recruiter-elsa", "studentId": "student-yann", "viewedAt": "2026-10-27T10:00:00.000Z" },
+    { "id": "r2", "recruiterId": "recruiter-elsa", "studentId": "student-sarah", "viewedAt": "2026-10-30T10:00:00.000Z" }
+  ]
+}

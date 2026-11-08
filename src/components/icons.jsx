@@ -1,0 +1,41 @@
+import React from 'react'
+
+function Icon({ size = 20, strokeWidth = 2, fill = 'none', children, ...props }) {
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill={fill === 'currentColor' ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>{children || <><path d="M12 3v18M3 12h18" /></>}</svg>
+}
+const make = (children) => (props) => <Icon {...props}>{children}</Icon>
+export const ArrowRight = make(<><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></>)
+export const ArrowUpRight = make(<><path d="M7 17 17 7" /><path d="M9 7h8v8" /></>)
+export const BarChart3 = make(<><path d="M4 20V10" /><path d="M10 20V4" /><path d="M16 20v-7" /><path d="M22 20H2" /></>)
+export const Bookmark = make(<path d="M6 3h12v18l-6-4-6 4Z" />)
+export const BriefcaseBusiness = make(<><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7V4h8v3M3 12h18" /></>)
+export const CheckCircle2 = make(<><circle cx="12" cy="12" r="9" /><path d="m8 12 2.5 2.5L16 9" /></>)
+export const ChevronRight = make(<path d="m9 18 6-6-6-6" />)
+export const CircleAlert = make(<><circle cx="12" cy="12" r="9" /><path d="M12 8v5M12 16h.01" /></>)
+export const Code2 = make(<><path d="m8 9-3 3 3 3M16 9l3 3-3 3M14 5l-4 14" /></>)
+export const Compass = make(<><circle cx="12" cy="12" r="9" /><path d="m15 9-2 4-4 2 2-4Z" /></>)
+export const Download = make(<><path d="M12 3v12M7 10l5 5 5-5M5 21h14" /></>)
+export const ExternalLink = ArrowUpRight
+export const Eye = make(<><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" /><circle cx="12" cy="12" r="2.5" /></>)
+export const FilePlus2 = make(<><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v5h5M12 11v6M9 14h6" /></>)
+export const FolderKanban = make(<><path d="M3 6h7l2 2h9v11H3z" /><path d="M8 12h3v4H8zM14 12h3v2h-3z" /></>)
+export const FolderPlus = make(<><path d="M3 6h7l2 2h9v11H3z" /><path d="M12 12v5M9.5 14.5h5" /></>)
+export const Github = make(<><path d="M15 20v-3.5a3 3 0 0 0-.8-2.1c2.7-.3 5.5-1.3 5.5-6a4.7 4.7 0 0 0-1.3-3.3A4.3 4.3 0 0 0 18.3 2S17.2 1.7 15 3.2a11.8 11.8 0 0 0-6 0C6.8 1.7 5.7 2 5.7 2a4.3 4.3 0 0 0-.1 3.1 4.7 4.7 0 0 0-1.3 3.3c0 4.7 2.8 5.7 5.5 6a3 3 0 0 0-.8 2.1V20" /><path d="M9 19c-3 .9-3-1.5-4.2-1.9" /></>)
+export const Heart = make(<path d="M20.8 8.6c0 6-8.8 11-8.8 11s-8.8-5-8.8-11a4.4 4.4 0 0 1 8-2.6 4.4 4.4 0 0 1 8 2.6Z" />)
+export const House = make(<><path d="m3 11 9-8 9 8" /><path d="M5 10v10h14V10M10 20v-6h4v6" /></>)
+export const LayoutDashboard = make(<><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></>)
+export const LogOut = make(<><path d="M10 17l5-5-5-5M15 12H3" /><path d="M21 3v18H10" /></>)
+export const MapPin = make(<><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></>)
+export const Menu = make(<><path d="M4 7h16M4 12h16M4 17h16" /></>)
+export const MoreHorizontal = make(<><circle cx="6" cy="12" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="18" cy="12" r="1" /></>)
+export const Palette = make(<><path d="M12 3a9 9 0 0 0 0 18h1.5a1.5 1.5 0 0 0 1.3-2.2 1.5 1.5 0 0 1 1.3-2.2H18a3 3 0 0 0 3-3c0-5.8-4-10.6-9-10.6Z" /><circle cx="7.5" cy="11" r=".7" /><circle cx="10" cy="7.5" r=".7" /><circle cx="15" cy="8" r=".7" /></>)
+export const Plus = make(<><path d="M12 5v14M5 12h14" /></>)
+export const Search = make(<><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></>)
+export const Settings = make(<><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.1 2.1-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5v.2h-3v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1-2.1-2.1.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H5.3v-3h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1 2.1-2.1.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5v-.2h3v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1 2.1 2.1-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1h.2v3h-.2a1.7 1.7 0 0 0-1.5 1Z" /></>)
+export const ShieldAlert = make(<><path d="M12 3 5 6v5c0 5 3.2 8 7 10 3.8-2 7-5 7-10V6Z" /><path d="M12 8v5M12 16h.01" /></>)
+export const SlidersHorizontal = make(<><path d="M4 7h16M4 17h16" /><circle cx="9" cy="7" r="2" /><circle cx="15" cy="17" r="2" /></>)
+export const Sparkles = make(<><path d="m12 3 1.5 5.5L19 10l-5.5 1.5L12 17l-1.5-5.5L5 10l5.5-1.5Z" /><path d="m19 16 .7 2.3L22 19l-2.3.7L19 22l-.7-2.3L16 19l2.3-.7Z" /></>)
+export const Trash2 = make(<><path d="M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3" /></>)
+export const UserRound = make(<><circle cx="12" cy="8" r="4" /><path d="M4 21c.7-4 3.3-6 8-6s7.3 2 8 6" /></>)
+export const UsersRound = make(<><circle cx="9" cy="8" r="3" /><path d="M3 20c.6-3.5 2.6-5 6-5s5.4 1.5 6 5M16 7a3 3 0 0 1 0 5M18 15c2 .7 3 2.3 3 5" /></>)
+export const X = make(<><path d="m6 6 12 12M18 6 6 18" /></>)
