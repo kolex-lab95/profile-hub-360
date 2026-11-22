@@ -4,6 +4,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { Brand } from './Brand'
 import { unreadCount } from '../utils/messaging'
+import { favoriteCountForUser } from '../utils/favorites'
 
 const studentLinks = [
   { to: '/etudiant', label: 'Vue d’ensemble', icon: House, end: true },
@@ -18,15 +19,15 @@ const recruiterLinks = [
 ]
 
 export function AppLayout({ children }) {
-  const { user, logout, favorites, messages } = useApp()
+  const { user, logout, favorites, messages, conversations } = useApp()
   const navigate = useNavigate()
   const links = user.role === 'student' ? studentLinks : recruiterLinks
   const navigation = [...links, { to: '/messages', label: 'Messages', icon: MessageCircle }]
   const mobileNavigation = user.role === 'student' ? [...links.slice(0, 3), navigation.at(-1)] : navigation
   const roleLabel = user.role === 'student' ? 'Espace étudiant' : 'Espace recruteur'
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem('portfolio-hub-sidebar-collapsed') === 'true')
-  const favoritesCount = user.role === 'recruiter' ? favorites.filter((favorite) => favorite.recruiterId === user.id).length : 0
-  const messagesCount = unreadCount(messages, user.id)
+  const favoritesCount = user.role === 'recruiter' ? favoriteCountForUser(favorites, user.id) : 0
+  const messagesCount = unreadCount(messages, conversations, user.id)
   const handleLogout = () => { logout(); navigate('/') }
   const toggleCollapsed = () => setCollapsed((value) => { localStorage.setItem('portfolio-hub-sidebar-collapsed', String(!value)); return !value })
   const navigationItem = ({ to, label, icon: Icon, end }) => <NavLink key={to} to={to} end={end} data-tooltip={label} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}><Icon size={19} /><span className="nav-label">{label}</span>{to === '/recruteur/favoris' && favoritesCount > 0 && <b className="nav-badge favorites-badge">{favoritesCount}</b>}{to === '/messages' && messagesCount > 0 && <b className="nav-badge messages-badge">{messagesCount}</b>}</NavLink>

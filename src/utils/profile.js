@@ -1,6 +1,5 @@
 export function availabilityLabel(profile) {
-  if (profile?.availabilityStatus === 'unavailable') return 'Indisponible'
-  return profile?.availability || 'Disponible'
+  return isAvailable(profile) ? 'Disponible' : 'Indisponible'
 }
 
 export function isAvailable(profile) {

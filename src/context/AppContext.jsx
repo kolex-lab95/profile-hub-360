@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { api } from '../services/api'
-import { directConversation, unreadMessages } from '../utils/messaging'
+import { addFavoriteToList, removeFavoriteFromList } from '../utils/favorites'
+import { directConversation, markConversationMessagesRead, unreadMessages } from '../utils/messaging'
 
 const AppContext = createContext(null)
 const SESSION_KEY = 'portfolio-hub-session'
@@ -21,6 +22,7 @@ export function AppProvider({ children }) {
         api.getAll('users'), api.getAll('projects'), api.getAll('views'), api.getAll('favorites'), api.getAll('recentProfiles'), api.getAll('conversations'), api.getAll('messages'),
       ])
       setData({ users, projects, views, favorites, recentProfiles, conversations, messages })
+      setError('')
       setStatus('ready')
     } catch (err) {
       if (!silent) {
@@ -49,8 +51,34 @@ export function AppProvider({ children }) {
   const setTheme = (nextTheme) => setThemeState(nextTheme)
   const flash = (text, type = 'success') => setNotice({ text, type })
   const mutate = async (operation, successMessage) => {
-    try { const result = await operation(); await refresh(); if (successMessage) flash(successMessage); return result }
+    try { const result = await operation(); await refresh({ silent: true }); if (successMessage) flash(successMessage); return result }
     catch (err) { flash('Cette opération n’a pas abouti. Réessayez dans quelques instants.', 'error'); throw err }
+  }
+
+  const createFavorite = async (favorite, successMessage = 'Favori ajouté à votre sélection.') => {
+    setData((current) => ({ ...current, favorites: addFavoriteToList(current.favorites, favorite) }))
+    try {
+      const created = await api.create('favorites', favorite)
+      setData((current) => ({ ...current, favorites: current.favorites.map((item) => item.id === favorite.id ? created : item) }))
+      flash(successMessage)
+      return created
+    } catch (err) {
+      setData((current) => ({ ...current, favorites: removeFavoriteFromList(current.favorites, favorite.id) }))
+      flash('Cette opération n’a pas abouti. Réessayez dans quelques instants.', 'error')
+      throw err
+    }
+  }
+
+  const removeFavorite = async (favorite, successMessage = 'Favori retiré de votre sélection.') => {
+    setData((current) => ({ ...current, favorites: removeFavoriteFromList(current.favorites, favorite.id) }))
+    try {
+      await api.remove('favorites', favorite.id)
+      flash(successMessage)
+    } catch (err) {
+      setData((current) => ({ ...current, favorites: addFavoriteToList(current.favorites, favorite) }))
+      flash('Cette opération n’a pas abouti. Réessayez dans quelques instants.', 'error')
+      throw err
+    }
   }
 
   const updateCurrentUser = async (updates, successMessage = 'Profil mis à jour.') => {
@@ -72,15 +100,18 @@ export function AppProvider({ children }) {
   }
 
   const markConversationRead = async (conversationId) => {
-    const unread = unreadMessages(data.messages, user.id, conversationId)
+    const conversation = data.conversations.find((item) => item.id === conversationId && item.participantIds?.includes(user?.id))
+    if (!conversation) return
+    const unread = unreadMessages(data.messages, data.conversations, user.id, conversationId)
     if (!unread.length) return
     try {
-      await Promise.all(unread.map((message) => api.update('messages', message.id, { ...message, readBy: [...(message.readBy || []), user.id] })))
+      const nextMessages = markConversationMessagesRead(data.messages, data.conversations, user.id, conversation.id)
+      await Promise.all(unread.map((message) => api.update('messages', message.id, nextMessages.find((item) => item.id === message.id))))
       await refresh({ silent: true })
     } catch (err) { flash('Impossible de mettre à jour la lecture des messages.', 'error') }
   }
 
-  const value = useMemo(() => ({ ...data, status, error, user, theme, notice, login, logout, setTheme, refresh, flash, mutate, updateCurrentUser, getOrCreateConversation, markConversationRead }), [data, status, error, user, theme, notice, refresh])
+  const value = useMemo(() => ({ ...data, status, error, user, theme, notice, login, logout, setTheme, refresh, flash, mutate, createFavorite, removeFavorite, updateCurrentUser, getOrCreateConversation, markConversationRead }), [data, status, error, user, theme, notice, refresh])
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>
 }
 

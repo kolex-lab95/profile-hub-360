@@ -2,10 +2,10 @@ import { describe, expect, it } from 'vitest'
 import { availabilityLabel, isAvailable } from './profile'
 
 describe('availability helpers', () => {
-  it('keeps legacy availability copy for an available profile', () => {
+  it('normalizes legacy availability copy to the binary display status', () => {
     const profile = { availability: 'Disponible dès juillet' }
     expect(isAvailable(profile)).toBe(true)
-    expect(availabilityLabel(profile)).toBe('Disponible dès juillet')
+    expect(availabilityLabel(profile)).toBe('Disponible')
   })
 
   it('makes an explicitly unavailable profile filterable and legible', () => {
