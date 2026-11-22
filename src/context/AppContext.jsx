@@ -1,33 +1,42 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { api } from '../services/api'
+import { directConversation, unreadMessages } from '../utils/messaging'
 
 const AppContext = createContext(null)
 const SESSION_KEY = 'portfolio-hub-session'
 const THEME_KEY = 'portfolio-hub-theme'
 
 export function AppProvider({ children }) {
-  const [data, setData] = useState({ users: [], projects: [], views: [], favorites: [], recentProfiles: [] })
+  const [data, setData] = useState({ users: [], projects: [], views: [], favorites: [], recentProfiles: [], conversations: [], messages: [] })
   const [status, setStatus] = useState('loading')
   const [error, setError] = useState('')
   const [user, setUser] = useState(() => JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'))
   const [theme, setThemeState] = useState(() => localStorage.getItem(THEME_KEY) || 'cobalt')
   const [notice, setNotice] = useState(null)
 
-  const refresh = useCallback(async () => {
-    setStatus('loading')
+  const refresh = useCallback(async ({ silent = false } = {}) => {
+    if (!silent) setStatus('loading')
     try {
-      const [users, projects, views, favorites, recentProfiles] = await Promise.all([
-        api.getAll('users'), api.getAll('projects'), api.getAll('views'), api.getAll('favorites'), api.getAll('recentProfiles'),
+      const [users, projects, views, favorites, recentProfiles, conversations, messages] = await Promise.all([
+        api.getAll('users'), api.getAll('projects'), api.getAll('views'), api.getAll('favorites'), api.getAll('recentProfiles'), api.getAll('conversations'), api.getAll('messages'),
       ])
-      setData({ users, projects, views, favorites, recentProfiles })
+      setData({ users, projects, views, favorites, recentProfiles, conversations, messages })
       setStatus('ready')
     } catch (err) {
-      setError('Impossible de joindre l’API de démonstration. Lancez « npm run dev » afin de démarrer Vite et json-server.')
-      setStatus('error')
+      if (!silent) {
+        setError('Impossible de joindre l’API de démonstration. Lancez « npm run dev » afin de démarrer Vite et json-server.')
+        setStatus('error')
+      }
     }
   }, [])
 
   useEffect(() => { refresh() }, [refresh])
+  useEffect(() => {
+    const sync = () => { if (document.visibilityState === 'visible') refresh({ silent: true }) }
+    const interval = window.setInterval(sync, 30000)
+    document.addEventListener('visibilitychange', sync)
+    return () => { window.clearInterval(interval); document.removeEventListener('visibilitychange', sync) }
+  }, [refresh])
   useEffect(() => { document.documentElement.dataset.theme = theme; localStorage.setItem(THEME_KEY, theme) }, [theme])
   useEffect(() => {
     if (!notice) return undefined
@@ -44,7 +53,34 @@ export function AppProvider({ children }) {
     catch (err) { flash('Cette opération n’a pas abouti. Réessayez dans quelques instants.', 'error'); throw err }
   }
 
-  const value = useMemo(() => ({ ...data, status, error, user, theme, notice, login, logout, setTheme, refresh, flash, mutate }), [data, status, error, user, theme, notice, refresh])
+  const updateCurrentUser = async (updates, successMessage = 'Profil mis à jour.') => {
+    const updated = await mutate(() => api.update('users', user.id, { ...user, ...updates }), successMessage)
+    localStorage.setItem(SESSION_KEY, JSON.stringify(updated))
+    setUser(updated)
+    return updated
+  }
+
+  const getOrCreateConversation = async (peerId) => {
+    const existing = directConversation(data.conversations, user.id, peerId)
+    if (existing) return existing
+    return mutate(() => api.create('conversations', {
+      id: `conversation-${crypto.randomUUID()}`,
+      participantIds: [user.id, peerId],
+      createdAt: new Date().toISOString(),
+      lastMessageAt: null,
+    }))
+  }
+
+  const markConversationRead = async (conversationId) => {
+    const unread = unreadMessages(data.messages, user.id, conversationId)
+    if (!unread.length) return
+    try {
+      await Promise.all(unread.map((message) => api.update('messages', message.id, { ...message, readBy: [...(message.readBy || []), user.id] })))
+      await refresh({ silent: true })
+    } catch (err) { flash('Impossible de mettre à jour la lecture des messages.', 'error') }
+  }
+
+  const value = useMemo(() => ({ ...data, status, error, user, theme, notice, login, logout, setTheme, refresh, flash, mutate, updateCurrentUser, getOrCreateConversation, markConversationRead }), [data, status, error, user, theme, notice, refresh])
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>
 }
 
