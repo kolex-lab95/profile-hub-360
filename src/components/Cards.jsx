@@ -1,5 +1,6 @@
 import { ArrowUpRight, Bookmark, Code2, Eye, Heart, MapPin, MoreHorizontal, Sparkles } from './icons'
 import { Link } from 'react-router-dom'
+import { availabilityLabel, isAvailable } from '../utils/profile'
 
 export function ProjectVisual({ visual = 'violet', title = '' }) {
   return <div className={`project-visual visual-${visual}`} aria-hidden="true"><span className="visual-orb one" /><span className="visual-orb two" /><span className="visual-panel" /><span className="visual-label">{title.slice(0, 2).toUpperCase() || 'PH'}</span></div>
@@ -20,5 +21,6 @@ export function ProjectCard({ project, owner, views = 0, favorite, onFavorite, e
 }
 
 export function TalentCard({ student, projectsCount, favorite, onFavorite }) {
-  return <article className="talent-card"><div className="talent-cover"><span className="cover-wave" /><button className={`icon-button ${favorite ? 'saved' : ''}`} onClick={onFavorite} aria-label="Ajouter le profil aux favoris"><Heart size={18} fill={favorite ? 'currentColor' : 'none'} /></button></div><div className="talent-body"><div className={`avatar avatar-large avatar-${student.accent}`}>{student.avatar}</div><div className="talent-heading"><h3>{student.name}</h3><p>{student.title}</p></div><span className="availability"><Sparkles size={13} />{student.availability}</span><div className="location"><MapPin size={14} />{student.location}</div><div className="tech-list">{student.skills.slice(0, 4).map((skill) => <span key={skill}>{skill}</span>)}</div><div className="talent-footer"><span><Code2 size={15} />{projectsCount} projets</span><Link className="text-link" to={`/profils/${student.id}`}>Voir le profil <ArrowUpRight size={15} /></Link></div></div></article>
+  const available = isAvailable(student)
+  return <article className="talent-card"><div className="talent-cover"><span className="cover-wave" /><button className={`icon-button ${favorite ? 'saved' : ''}`} onClick={onFavorite} aria-label="Ajouter le profil aux favoris"><Heart size={18} fill={favorite ? 'currentColor' : 'none'} /></button></div><div className="talent-body"><div className={`avatar avatar-large avatar-${student.accent}`}>{student.avatar}</div><div className="talent-heading"><h3>{student.name}</h3><p>{student.title}</p></div><span className={`availability ${available ? '' : 'unavailable'}`}><Sparkles size={13} />{availabilityLabel(student)}</span><div className="location"><MapPin size={14} />{student.location}</div><div className="tech-list">{student.skills.slice(0, 4).map((skill) => <span key={skill}>{skill}</span>)}</div><div className="talent-footer"><span><Code2 size={15} />{projectsCount} projets</span><Link className="text-link" to={`/profils/${student.id}`}>Voir le profil <ArrowUpRight size={15} /></Link></div></div></article>
 }
