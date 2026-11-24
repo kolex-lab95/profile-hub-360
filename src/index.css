@@ -77,3 +77,81 @@ h1,h2,h3,p { margin-top: 0; } h1,h2,h3 { letter-spacing: -.045em; } p { color: v
 @media (max-width:1120px){.stat-grid{grid-template-columns:repeat(2,1fr)}.cards-grid,.talent-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.settings-layout{grid-template-columns:1fr 290px}.project-detail-hero{grid-template-columns:37% 1fr}.detail-copy{padding:30px}.portfolio-layout{grid-template-columns:240px 1fr}}
 @media (max-width:860px){.landing-nav nav{display:none}.hero{grid-template-columns:1fr;padding-top:66px;padding-bottom:55px}.hero-art{height:260px;justify-content:flex-end}.hero-card{width:330px}.value-strip{grid-template-columns:repeat(2,1fr);gap:13px}.value-strip span+span{border-left:0}.section-heading{grid-template-columns:1fr}.how{grid-template-columns:1fr;gap:42px;padding-top:65px;padding-bottom:67px}.how>div:first-child{justify-self:start}.app-shell{padding-left:0;padding-bottom:74px}.sidebar{display:none}.mobile-top{display:flex;position:sticky;z-index:8;top:0;height:58px;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);align-items:center;justify-content:space-between;padding:0 18px;font-size:10px;font-weight:800;color:var(--primary)}.bottom-nav{height:68px;position:fixed;display:flex;z-index:8;bottom:0;left:0;right:0;background:var(--surface-strong);border-top:1px solid var(--line);justify-content:space-around;padding:7px 5px env(safe-area-inset-bottom)}.bottom-nav a{display:grid;place-items:center;gap:3px;color:var(--muted);font-size:8px;font-weight:800;min-width:57px}.bottom-nav a.active{color:var(--primary)}.app-main{padding:29px 22px 35px}.dashboard-grid,.stats-layout,.settings-layout{grid-template-columns:1fr}.editor-layout{grid-template-columns:1fr}.editor-side{grid-template-columns:1fr 1fr}.editor-actions{grid-column:span 2}.project-detail-hero{grid-template-columns:1fr}.project-detail-hero>.project-visual{min-height:235px}.profile-content{align-items:flex-start;flex-wrap:wrap}.profile-actions{width:100%;padding-left:110px;margin-top:-34px}.portfolio-layout{grid-template-columns:1fr}.portfolio-projects{grid-template-columns:repeat(2,minmax(0,1fr))}.auth-page{padding:22px}.auth-layout{margin-top:25px;grid-template-columns:1fr}.auth-aside{padding:48px;min-height:270px}.auth-quote{display:none}.auth-card{padding:44px}.recruiter-welcome{padding:28px}.welcome-orbs{opacity:.55}.showcase-grid{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:520px){body{font-size:13px}.landing-nav{height:65px;padding:0 19px}.landing-nav .button{padding:8px 11px;font-size:11px}.hero{min-height:510px;padding:50px 22px 30px}.hero-copy h1{font-size:44px}.hero-copy>p{font-size:13px}.hero-actions{flex-wrap:wrap}.hero-art{height:230px;justify-content:center}.hero-card{width:290px;padding:17px}.deco-circle.one{right:-60px}.landing-section{padding-left:21px;padding-right:21px}.value-strip{margin-top:-15px;border-radius:11px;padding-top:15px;padding-bottom:15px;font-size:9px;gap:10px}.showcase{padding-top:70px;padding-bottom:70px}.section-heading h2,.how h2{font-size:32px}.showcase-grid,.cards-grid,.talent-grid,.portfolio-projects{grid-template-columns:1fr}.how{padding:55px 22px;gap:32px}.steps{grid-template-columns:1fr;gap:18px}.steps h3{margin:7px 0 3px}.landing-footer{padding:22px;font-size:9px}.auth-page{padding:18px}.auth-layout{margin-top:20px;border-radius:17px}.auth-aside{padding:34px 28px;min-height:200px}.auth-aside h1{font-size:35px;margin:13px 0}.auth-card{padding:31px 24px}.auth-card h2{font-size:25px}.app-main{padding:24px 15px 28px}.page-header{display:grid;gap:14px;margin-bottom:23px}.page-header h1{font-size:29px}.page-header p{font-size:12px}.page-actions{justify-content:flex-start}.page-actions .button{padding:10px 11px;font-size:11px}.stat-grid{grid-template-columns:1fr 1fr;gap:9px}.metric-card{padding:12px;gap:8px}.metric-icon{width:30px;height:30px}.metric-copy strong{font-size:20px}.metric-copy>span,.metric-copy small{font-size:8px}.dashboard-grid{gap:13px;margin-bottom:29px}.panel{padding:18px}.project-toolbar{align-items:flex-start;gap:10px;flex-direction:column}.editor-side{grid-template-columns:1fr}.editor-actions{grid-column:auto}.form-row{grid-template-columns:1fr}.detail-copy{padding:22px}.detail-copy h1{font-size:30px}.detail-actions .button{font-size:11px;padding:10px}.project-story{margin:33px auto;padding:0}.profile-content{padding:0 19px 21px;gap:11px}.profile-info h1{font-size:26px}.profile-actions{padding-left:0;margin-top:0}.profile-actions .button{font-size:10px;padding:9px}.profile-avatar{width:75px;height:75px;font-size:18px;margin-top:-37px}.rank-list>div{grid-template-columns:21px minmax(80px,1fr) 1fr 18px;gap:6px}.rank-list strong{font-size:10px}.rank-list small{font-size:8px}.recruiter-welcome{padding:23px;min-height:210px}.recruiter-welcome h2{font-size:25px}.welcome-orbs{right:-65px}.favorite-list article{align-items:flex-start;flex-wrap:wrap}.favorite-list article>div{min-width:170px}.favorite-list .button{margin-left:50px}.settings-layout{gap:13px}.theme-choice{padding:10px}.toast{right:13px;left:13px;bottom:80px;max-width:none}.simple-page{padding:23px}.simple-page>.brand{left:22px;top:21px}.simple-page h1{font-size:29px}}
+
+/* Very compact phones need a denser composition, not a uniformly scaled page. */
+@media (max-width:359px){
+  body{overflow-x:hidden}
+  .landing-nav{height:58px;padding:0 14px}
+  .landing-nav .brand{transform:scale(.9);transform-origin:left center}
+  .landing-nav .button{min-height:38px;padding:7px 9px;font-size:10px}
+  .hero{min-height:0;padding:35px 16px 18px;gap:12px;align-content:start}
+  .hero-copy h1{font-size:clamp(34px,12vw,39px);line-height:1.03;margin:12px 0 14px}
+  .hero-copy>p{font-size:12px;line-height:1.55}
+  .hero-actions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:19px}
+  .hero-actions .button{width:100%;min-height:44px}
+  .hero-proof{margin-top:21px;gap:8px;font-size:10px;line-height:1.35}
+  .hero-art{height:181px;margin-top:2px;align-items:center}
+  .hero-card{width:min(258px,calc(100% - 20px));padding:14px;border-radius:19px;transform:rotate(3deg)}
+  .hero-card-head{font-size:9px}
+  .hero-person{gap:8px;margin:15px 0 11px}
+  .hero-person strong{font-size:14px}
+  .hero-skills{gap:5px}
+  .hero-skills span{padding:5px 6px;font-size:8px}
+  .hero-chart{height:56px;gap:5px;margin:16px 0 1px;padding-top:7px}
+  .hero-chart span{width:14px}
+  .hero-illustration-note{font-size:8px;margin-top:4px}
+  .deco-circle.one{right:-72px;bottom:-74px}
+  .deco-circle.two{top:-52px}
+  .value-strip{margin-top:0;padding:12px 10px;border-radius:10px;gap:8px;font-size:8px;line-height:1.35}
+  .landing-section{padding-left:16px;padding-right:16px}
+  .showcase{padding-top:48px;padding-bottom:48px}
+  .section-heading h2,.how h2{font-size:27px;line-height:1.06}
+  .project-visual{height:132px}
+  .project-card-body{padding:13px}
+  .project-card h3{font-size:16px;margin:10px 0 5px}
+  .project-card p{margin-bottom:11px;min-height:36px;font-size:11px;line-height:1.5}
+  .project-card-footer{margin-top:12px;padding-top:10px}
+  .how{padding:45px 16px;gap:26px}
+  .landing-footer{padding:18px 16px}
+  .auth-page{padding:13px}
+  .auth-brand{transform:scale(.9);transform-origin:left top}
+  .auth-layout{margin-top:9px;border-radius:14px}
+  .auth-card{order:1;padding:23px 18px}
+  .auth-card h2{font-size:23px;line-height:1.12}
+  .auth-card>div>p{font-size:12px;line-height:1.5}
+  .auth-card form{margin:22px 0 18px;gap:13px}
+  .auth-card input{min-height:44px;font-size:16px;padding:10px 11px}
+  .auth-aside{order:2;min-height:0;padding:23px 20px}
+  .auth-aside h1{font-size:27px;margin:8px 0}
+  .auth-aside>p{font-size:12px;line-height:1.5;margin:0}
+  .auth-aside:after{width:210px;height:210px;right:-82px;bottom:-114px;border-width:20px}
+  .security-note{font-size:9px!important;margin-top:14px;padding:8px}
+  .app-main{padding:18px 13px 23px}
+  .mobile-top{height:54px;padding:0 13px}
+  .bottom-nav{height:64px;padding-top:6px}
+  .bottom-nav a{font-size:7px}
+  .page-header{gap:11px;margin-bottom:18px}
+  .page-header h1{font-size:26px}
+  .page-actions{gap:7px}
+  .page-actions .button{min-height:42px}
+  .panel{padding:15px}
+  .panel-head h2,.section-row h2{font-size:18px}
+  .metric-card{padding:10px;gap:7px}
+  .metric-copy strong{font-size:18px}
+  .metric-copy>span,.metric-copy small{font-size:7px}
+  .metric-icon{width:28px;height:28px}
+  .chart-panel,.insight-panel{min-height:0}
+  .bar-chart{height:145px;margin-top:15px}
+  .rank-list{gap:12px;margin-top:18px}
+  .rank-list>div{grid-template-columns:19px minmax(74px,1fr) minmax(45px,1fr) 17px;gap:5px}
+  .recruiter-welcome{padding:19px;min-height:180px}
+  .recruiter-welcome h2{font-size:22px}
+  .project-detail-hero>.project-visual{min-height:190px}
+}
+
+@media (max-width:359px) and (max-height:620px){
+  .hero{padding-top:27px}
+  .hero-proof{margin-top:16px}
+  .hero-art{height:166px}
+  .showcase{padding-top:42px}
+}
