@@ -15,8 +15,8 @@ describe('i18n resources', () => {
     expect(messages.en.auth.invalidCredentials).toBe('Incorrect email address or password.')
   })
   it('provides public-header labels in both languages', () => {
-    expect(messages.fr.public).toEqual({ signIn: 'Connexion', dashboard: 'Tableau de bord' })
-    expect(messages.en.public).toEqual({ signIn: 'Sign in', dashboard: 'Dashboard' })
+    expect(messages.fr.public.signIn).toBe('Connexion')
+    expect(messages.en.public.signIn).toBe('Sign in')
   })
   it('handles singular and plural labels', () => {
     expect(plural(1, 'project', 'projects')).toBe('1 project')

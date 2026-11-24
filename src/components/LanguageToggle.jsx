@@ -5,18 +5,19 @@ import { Languages } from './icons'
 export function LanguageToggle() {
   const { language, setLanguage, t } = useTranslation()
   const [open, setOpen] = useState(false)
+  const openRef = useRef(open)
   const toggleRef = useRef(null)
+  openRef.current = open
 
   useEffect(() => {
-    if (!open) return undefined
     const closeOnEscape = (event) => {
-      if (event.key !== 'Escape') return
+      if (event.key !== 'Escape' || !openRef.current) return
       setOpen(false)
       toggleRef.current?.focus()
     }
     document.addEventListener('keydown', closeOnEscape)
     return () => document.removeEventListener('keydown', closeOnEscape)
-  }, [open])
+  }, [])
 
   const chooseLanguage = (nextLanguage) => {
     setLanguage(nextLanguage)

@@ -19,7 +19,7 @@ import { availabilityLabel, isAvailable } from './utils/profile'
 import { distinctRecentProfiles } from './utils/recentProfiles'
 import { publicShowcaseOwner, publicShowcaseProjects } from './data/publicShowcase'
 import { footerCopyright } from './utils/copyright'
-import { accountFromSignup, dashboardPathForRole, matchingAccount, publicHeaderAction, signupValidationError } from './utils/authentication'
+import { accountFromSignup, dashboardPathForRole, matchingAccount, signupValidationError } from './utils/authentication'
 import { removeCustomCover, saveCustomCover, validateCustomCover } from './utils/projectCovers'
 import { LanguageToggle } from './components/LanguageToggle'
 import { useTranslation } from './i18n/I18n'
@@ -41,12 +41,11 @@ const coverErrorMessage = (reason) => ({
   missing: 'Sélectionnez une image avant de continuer.',
 }[reason] || 'Impossible de préparer cette image.')
 
-function LandingPage() {
-  const { user } = useApp(); const { t } = useTranslation()
+export function LandingPage() {
+  const { t } = useTranslation()
   const copyright = footerCopyright()
-  const action = publicHeaderAction(user)
   return <div className="landing">
-    <header className="landing-nav"><Link to="/"><Brand /></Link><nav><a href="#decouvrir">Explorer</a><a href="#comment">Comment ça marche</a></nav><div className="landing-nav-actions"><LanguageToggle /><Link className="button primary compact" to={action.path}>{t(action.labelKey)} <ArrowRight size={16} /></Link></div></header>
+    <header className="landing-nav"><Link to="/"><Brand /></Link><nav><a href="#decouvrir">Explorer</a><a href="#comment">Comment ça marche</a></nav><div className="landing-nav-actions"><LanguageToggle /><Link className="button primary compact" to="/connexion">{t('public.signIn')} <ArrowRight size={16} /></Link></div></header>
     <main>
       <section className="hero"><div className="hero-copy"><span className="eyebrow light"><Sparkles size={15} />Plateforme portfolio & recrutement</span><h1>Montrez ce que vous savez <i>construire.</i></h1><p>Valorisez vos réalisations, affirmez vos compétences et créez des opportunités. Portfolio Hub rapproche les étudiants et les recruteurs autour de projets concrets.</p><div className="hero-actions"><Link className="button light-button" to="/inscription">Créer mon compte <ArrowRight size={17} /></Link><Link className="button ghost-light" to="/recruteur/recherche">Découvrir les talents</Link></div><div className="hero-proof"><div className="hero-proof-orbs" aria-hidden="true"><i /><i /><i /></div><span>Des parcours valorisés par des projets concrets.</span></div></div><div className="hero-art"><div className="hero-card floating"><div className="hero-card-head"><span>Portfolio en action</span><Sparkles size={18} /></div><div className="hero-person"><span className="avatar avatar-large avatar-coral">PH</span><div><strong>Profil professionnel</strong><small>Projets & compétences</small></div><span className="pulse" /></div><div className="hero-skills"><span>Projets</span><span>Compétences</span><span>Visibilité</span></div><div className="hero-chart" aria-label="Aperçu illustratif de visibilité"><span style={{ height: '45%' }} /><span style={{ height: '68%' }} /><span style={{ height: '52%' }} /><span style={{ height: '85%' }} /><span style={{ height: '72%' }} /><span style={{ height: '100%' }} /></div><small className="hero-illustration-note">Aperçu illustratif</small></div><div className="deco-circle one" /><div className="deco-circle two" /></div></section>
       <section className="landing-section value-strip"><span>Portfolio orienté projets</span><span>Découverte par compétences</span><span>Suivi utile des consultations</span><span>Export PDF professionnel</span></section>
@@ -56,7 +55,7 @@ function LandingPage() {
   </div>
 }
 
-function LoginPage() {
+export function LoginPage() {
   const { users, login, status } = useApp(); const location = useLocation(); const navigate = useNavigate()
   const [email, setEmail] = useState(''); const [password, setPassword] = useState(''); const [error, setError] = useState('')
   const submit = (event) => { event.preventDefault(); const match = matchingAccount(users, email, password); if (!match) return setError('Adresse e-mail ou mot de passe incorrect.'); login(match); navigate(location.state?.from || dashboardPathForRole(match.role)) }
