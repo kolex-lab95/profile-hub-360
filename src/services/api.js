@@ -1,22 +1,17 @@
-const API_ROOT = '/api'
+import { apiClient, apiError } from './api/client'
 
-async function request(path, options = {}) {
-  const response = await fetch(`${API_ROOT}${path}`, {
-    headers: { 'Content-Type': 'application/json', ...options.headers },
-    ...options,
-    body: options.body ? JSON.stringify(options.body) : undefined,
-  })
-  if (!response.ok) {
-    const detail = await response.text()
-    throw new Error(detail || `Erreur API (${response.status})`)
+async function request(config) {
+  try {
+    const response = await apiClient(config)
+    return response.status === 204 ? null : response.data
+  } catch (error) {
+    throw apiError(error)
   }
-  if (response.status === 204) return null
-  return response.json()
 }
 
 export const api = {
-  getAll: (resource) => request(`/${resource}`),
-  create: (resource, entity) => request(`/${resource}`, { method: 'POST', body: entity }),
-  update: (resource, id, entity) => request(`/${resource}/${id}`, { method: 'PUT', body: entity }),
-  remove: (resource, id) => request(`/${resource}/${id}`, { method: 'DELETE' }),
+  getAll: (resource) => request({ url: `/${resource}`, method: 'GET' }),
+  create: (resource, entity) => request({ url: `/${resource}`, method: 'POST', data: entity }),
+  update: (resource, id, entity) => request({ url: `/${resource}/${id}`, method: 'PUT', data: entity }),
+  remove: (resource, id) => request({ url: `/${resource}/${id}`, method: 'DELETE' }),
 }
