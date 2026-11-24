@@ -1,10 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { dailyVisibility, matchScore, recentStudentActivity, relativeDateFr, studentMetrics } from './analytics'
+import { dailyVisibility, matchScore, recentStudentActivity, relativeDateFr, studentMetrics, topProjectsByViews, validStudentViews } from './analytics'
 
 const users = [
   { id: 'student', role: 'student', name: 'Élise Martin', avatar: 'ÉM', accent: 'coral' },
   { id: 'r1', role: 'recruiter', name: 'Ana Ruiz', avatar: 'AR', accent: 'blue' },
   { id: 'r2', role: 'recruiter', name: 'Noé Bernard', avatar: 'NB', accent: 'jade' },
+  { id: 'r3', role: 'recruiter', name: 'Sarah Lemoine', avatar: 'SL', accent: 'coral' },
+  { id: 'r4', role: 'recruiter', name: 'Maya Chen', avatar: 'MC', accent: 'blue' },
+  { id: 'r5', role: 'recruiter', name: 'Victor Martin', avatar: 'VM', accent: 'jade' },
   { id: 'other-student', role: 'student', name: 'Autre étudiant' },
 ]
 
@@ -52,6 +55,30 @@ describe('studentMetrics', () => {
     expect(result.profileTrend).toBe('—')
     expect(result.projectTrend).toBe('—')
     expect(result.topProject).toBeNull()
+  })
+
+  it('excludes orphaned, anonymous, self, student, draft and unrelated project views from every student metric', () => {
+    const invalidAndValidViews = [
+      { id: 'identified', studentId: 'student', viewerId: 'r1', viewedAt: '2026-05-10T10:00:00.000Z' },
+      { id: 'orphaned', studentId: 'student', viewerId: 'missing-recruiter', viewedAt: '2026-05-10T10:01:00.000Z' },
+      { id: 'anonymous', studentId: 'student', viewerId: null, viewedAt: '2026-05-10T10:02:00.000Z' },
+      { id: 'self', studentId: 'student', viewerId: 'student', viewedAt: '2026-05-10T10:03:00.000Z' },
+      { id: 'student-viewer', studentId: 'student', viewerId: 'other-student', viewedAt: '2026-05-10T10:04:00.000Z' },
+      { id: 'draft', studentId: 'student', projectId: 'b', viewerId: 'r1', viewedAt: '2026-05-10T10:05:00.000Z' },
+      { id: 'unrelated-project', studentId: 'student', projectId: 'c', viewerId: 'r1', viewedAt: '2026-05-10T10:06:00.000Z' },
+    ]
+    const options = { now: '2026-05-10T12:00:00.000Z', users, timeZone: 'UTC' }
+    const metrics = studentMetrics(invalidAndValidViews, projects, 'student', options)
+    const daily = dailyVisibility(invalidAndValidViews, projects, 'student', options)
+    const activity = recentStudentActivity(invalidAndValidViews, projects, 'student', options)
+
+    expect(validStudentViews(invalidAndValidViews, projects, 'student', options).map((view) => view.id)).toEqual(['identified'])
+    expect(metrics.validViews.map((view) => view.id)).toEqual(['identified'])
+    expect(metrics).toMatchObject({ profileViews: 1, projectViews: 0, uniqueRecruiters: 1 })
+    expect(metrics.byProject.find((project) => project.id === 'a')?.views).toBe(0)
+    expect(daily.reduce((total, day) => total + day.total, 0)).toBe(1)
+    expect(activity.map((item) => item.id)).toEqual(['identified'])
+    expect(activity[0].visitorName).toBe('Ana Ruiz')
   })
 })
 
@@ -104,12 +131,21 @@ describe('dailyVisibility', () => {
 })
 
 describe('project ranking and recent activity', () => {
-  it('orders tied projects stably and lets the screen take only the first four', () => {
-    const manyProjects = ['Zeste', 'Atlas', 'Brume', 'Écho', 'Delta'].map((title, index) => ({ id: `p${index}`, ownerId: 'student', published: true, title, category: 'Application web' }))
+  it('orders tied projects stably and returns at most the top five projects', () => {
+    const manyProjects = ['Zeste', 'Atlas', 'Brume', 'Écho', 'Delta', 'Faro'].map((title, index) => ({ id: `p${index}`, ownerId: 'student', published: true, title, category: 'Application web' }))
     const views = manyProjects.flatMap((project, index) => Array.from({ length: index % 2 ? 1 : 2 }, (_, occurrence) => ({ id: `${project.id}-${occurrence}`, studentId: 'student', projectId: project.id, viewerId: occurrence ? 'r2' : 'r1', viewedAt: '2026-05-10T10:00:00.000Z' })))
     const ranked = studentMetrics(views, manyProjects, 'student', { now: '2026-05-10T12:00:00.000Z', users, timeZone: 'UTC' }).byProject
-    expect(ranked.map((project) => project.title)).toEqual(['Brume', 'Delta', 'Zeste', 'Atlas', 'Écho'])
-    expect(ranked.slice(0, 4)).toHaveLength(4)
+    expect(ranked.map((project) => project.title)).toEqual(['Brume', 'Delta', 'Zeste', 'Atlas', 'Écho', 'Faro'])
+    expect(topProjectsByViews(ranked).map((project) => project.title)).toEqual(['Brume', 'Delta', 'Zeste', 'Atlas', 'Écho'])
+  })
+
+  it('handles one, three, five and more than five projects without fabricating a ranking', () => {
+    const makeProject = (index, views) => ({ id: `p${index}`, title: `Projet ${index}`, views })
+    expect(topProjectsByViews([makeProject(1, 3)])).toHaveLength(1)
+    expect(topProjectsByViews([makeProject(1, 3), makeProject(2, 2), makeProject(3, 1)])).toHaveLength(3)
+    expect(topProjectsByViews([1, 2, 3, 4, 5].map((index) => makeProject(index, index)))).toHaveLength(5)
+    expect(topProjectsByViews([1, 2, 3, 4, 5, 6].map((index) => makeProject(index, index))).map((project) => project.id)).toEqual(['p6', 'p5', 'p4', 'p3', 'p2'])
+    expect(topProjectsByViews([makeProject(1, 0), makeProject(2, 0), makeProject(3, 0)]).map((project) => project.views)).toEqual([0, 0, 0])
   })
 
   it('exposes the latest five valid events with real visitor data and distinct visits', () => {
@@ -123,10 +159,10 @@ describe('project ranking and recent activity', () => {
       { id: 'same-recruiter-later', studentId: 'student', projectId: 'a', viewerId: 'r1', viewedAt: '2026-05-10T11:50:00.000Z' },
     ]
     const activity = recentStudentActivity(views, projects, 'student', { now: '2026-05-10T12:00:00.000Z', users, timeZone: 'UTC' })
-    expect(activity.map((item) => item.id)).toEqual(['same-recruiter-later', 'unknown', 'project', 'profile', 'old'])
+    expect(activity.map((item) => item.id)).toEqual(['same-recruiter-later', 'project', 'profile', 'old'])
     expect(activity[0]).toMatchObject({ visitorName: 'Ana Ruiz', type: 'project', projectTitle: 'Atlas', relativeDate: 'Il y a 10 minutes' })
-    expect(activity[1].visitorName).toBe('Visiteur non identifié')
-    expect(activity[3]).toMatchObject({ type: 'profile', projectTitle: null })
+    expect(activity.every((item) => item.visitorName !== 'Visiteur non identifié')).toBe(true)
+    expect(activity[2]).toMatchObject({ type: 'profile', projectTitle: null })
   })
 
   it('formats short and old activity dates in French without a dashboard reload', () => {

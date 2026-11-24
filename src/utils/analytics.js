@@ -64,7 +64,7 @@ function percentageChange(current, previous) {
 function isExternalView(view, studentId, users) {
   if (!view.viewerId || view.viewerId === studentId) return false
   const viewer = users.find((user) => user.id === view.viewerId)
-  return !viewer || viewer.role === 'recruiter'
+  return viewer?.role === 'recruiter'
 }
 
 function uniqueViewKey(view) {
@@ -140,13 +140,20 @@ export function recentStudentActivity(views, projects, studentId, { now = new Da
       return {
         id: view.id || `${view.viewerId}-${view.viewedAt}-${view.projectId || 'profile'}`,
         visitor,
-        visitorName: visitor?.name || 'Visiteur non identifié',
+        visitorName: visitor.name,
         type: project ? 'project' : 'profile',
         projectTitle: project?.title || null,
         viewedAt: view.viewedAt,
         relativeDate: relativeDateFr(view.viewedAt, now, { timeZone }),
       }
     })
+}
+
+export function topProjectsByViews(projects, limit = 5) {
+  return projects
+    .slice()
+    .sort((first, second) => second.views - first.views || first.title.localeCompare(second.title, 'fr') || String(first.id).localeCompare(String(second.id)))
+    .slice(0, limit)
 }
 
 export function studentMetrics(views, projects, studentId, { now = new Date(), users = [], timeZone } = {}) {
@@ -178,6 +185,8 @@ export function studentMetrics(views, projects, studentId, { now = new Date(), u
   const currentProjectViews = projectViews.filter((view) => inRange(view, currentPeriodStart, new Date(currentWeekStart.getTime() + (7 * DAY_MS)))).length
   const previousProfileViews = profileViews.filter((view) => inRange(view, previousPeriodStart, currentPeriodStart)).length
   const previousProjectViews = projectViews.filter((view) => inRange(view, previousPeriodStart, currentPeriodStart)).length
+  const currentVisibility = currentProfileViews + currentProjectViews
+  const previousVisibility = previousProfileViews + previousProjectViews
   const daily = dailyVisibility(views, projects, studentId, { now: referenceDate, users, timeZone })
 
   return {
@@ -192,6 +201,7 @@ export function studentMetrics(views, projects, studentId, { now = new Date(), u
     weeklyTotal: weekly.reduce((total, week) => total + week.total, 0),
     daily,
     dailyTotal: daily.reduce((total, day) => total + day.total, 0),
+    visibilityComparison: { current: currentVisibility, previous: previousVisibility },
     profileTrend: percentageChange(currentProfileViews, previousProfileViews),
     projectTrend: percentageChange(currentProjectViews, previousProjectViews),
   }
