@@ -18,6 +18,7 @@ import { SkillFilter } from './components/SkillFilter'
 import { availabilityLabel, isAvailable } from './utils/profile'
 import { distinctRecentProfiles } from './utils/recentProfiles'
 import { publicShowcaseOwner, publicShowcaseProjects } from './data/publicShowcase'
+import { footerCopyright } from './utils/copyright'
 import { accountFromSignup, dashboardPathForRole, matchingAccount, signupValidationError } from './utils/authentication'
 
 const THEMES = [
@@ -32,6 +33,7 @@ const findProject = (projects, id) => projects.find((project) => project.id === 
 
 function LandingPage() {
   const { user } = useApp()
+  const copyright = footerCopyright()
   return <div className="landing">
     <header className="landing-nav"><Link to="/"><Brand /></Link><nav><a href="#decouvrir">Explorer</a><a href="#comment">Comment ça marche</a></nav>{user ? <Link className="button primary compact" to={user.role === 'student' ? '/etudiant' : '/recruteur'}>Mon espace <ArrowRight size={16} /></Link> : <Link className="button primary compact" to="/connexion">Connexion <ArrowRight size={16} /></Link>}</header>
     <main>
@@ -39,7 +41,7 @@ function LandingPage() {
       <section className="landing-section value-strip"><span>Portfolio orienté projets</span><span>Découverte par compétences</span><span>Suivi utile des consultations</span><span>Export PDF professionnel</span></section>
       <section id="decouvrir" className="landing-section showcase"><div className="section-heading"><span className="eyebrow">À découvrir</span><h2>Des projets qui racontent<br />plus qu’un CV.</h2><p>Chaque portfolio met le travail en contexte, sans détour et avec une identité qui lui est propre.</p></div><div className="showcase-grid">{publicShowcaseProjects.map((project) => <ProjectCard key={project.id} project={project} owner={publicShowcaseOwner} ownerLink={false} projectLink={false} illustrative />)}</div></section>
       <section id="comment" className="landing-section how"><div><span className="eyebrow">Une expérience claire</span><h2>Deux espaces.<br />Un même élan.</h2></div><div className="steps"><div><b>01</b><h3>Construire</h3><p>Les candidats mettent leurs projets en récit, à leur rythme.</p></div><div><b>02</b><h3>Découvrir</h3><p>Les recruteurs trouvent les bonnes compétences, avec du contexte.</p></div><div><b>03</b><h3>Se rencontrer</h3><p>Les favoris transforment une découverte en opportunité concrète.</p></div></div></section>
-    </main><footer className="landing-footer"><Brand /><span className="landing-footer-full">Portfolio Hub · Plateforme portfolio & recrutement</span><span className="landing-footer-compact">© Portfolio Hub</span></footer>
+    </main><footer className="landing-footer"><Brand /><span className="landing-footer-copyright">{copyright}<span className="landing-footer-rights"> · Tous droits réservés</span></span></footer>
   </div>
 }
 
