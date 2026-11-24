@@ -5,6 +5,7 @@ import { useApp } from '../context/AppContext'
 import { Brand } from './Brand'
 import { unreadCount } from '../utils/messaging'
 import { favoriteCountForUser } from '../utils/favorites'
+import { LanguageToggle } from './LanguageToggle'
 
 const studentLinks = [
   { to: '/etudiant', label: 'Vue d’ensemble', icon: House, end: true },
@@ -39,12 +40,13 @@ export function AppLayout({ children }) {
         {navigation.map(navigationItem)}
       </nav>
       <div className="sidebar-bottom">
+        <LanguageToggle />
         {navigationItem({ to: '/parametres', label: 'Paramètres', icon: Settings })}
         <button className="nav-item logout" data-tooltip="Se déconnecter" onClick={handleLogout}><LogOut size={19} /><span className="nav-label">Se déconnecter</span></button>
         <div className="user-chip"><div className={`avatar avatar-${user.accent}`}>{user.avatar}</div><div><strong>{user.name}</strong><span>{user.title}</span></div></div>
       </div>
     </aside>
-    <header className="mobile-top"><Link to="/" aria-label="Accueil"><Brand compact /></Link><span>{roleLabel}</span><NavLink to="/parametres" aria-label="Paramètres"><Palette size={20} /></NavLink></header>
+    <header className="mobile-top"><Link to="/" aria-label="Accueil"><Brand compact /></Link><span>{roleLabel}</span><div className="mobile-top-actions"><LanguageToggle /><NavLink to="/parametres" aria-label="Paramètres"><Palette size={20} /></NavLink></div></header>
     <main className="app-main">{children}</main>
     <nav className="bottom-nav" aria-label="Navigation mobile">
       {mobileNavigation.map(({ to, label, icon: Icon, end }) => <NavLink key={to} to={to} end={end} className={({ isActive }) => isActive ? 'active' : ''}><span className="bottom-icon"><Icon size={20} />{to === '/messages' && messagesCount > 0 && <b className="bottom-badge">{messagesCount}</b>}{to === '/recruteur/favoris' && favoritesCount > 0 && <b className="bottom-badge">{favoritesCount}</b>}</span><span>{label.replace('Vue d’ensemble', 'Accueil').replace('Trouver des talents', 'Talents')}</span></NavLink>)}
