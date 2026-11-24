@@ -10,7 +10,8 @@
     "build": "vite build",
     "test": "vitest run",
     "test:watch": "vitest",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "seed:demo-recruiter": "node scripts/ensure-demo-recruiter.mjs"
   },
   "dependencies": {
     "jspdf": "^4.2.1",

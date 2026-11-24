@@ -28,6 +28,15 @@ npm run build
 | Étudiant | `yann@portfolio.demo` | `demo123` |
 | Étudiante | `sarah@portfolio.demo` | `demo123` |
 | Recruteuse | `elsa@talent.demo` | `demo123` |
+| Recruteuse | `nadia@talent.demo` | `demo123` |
+
+Nadia Faye est recruteuse chez Horizon Talent. Sur une nouvelle installation, ajoutez ce compte de démonstration sans écraser les données locales existantes :
+
+```bash
+npm run seed:demo-recruiter
+```
+
+La commande est idempotente : elle n’ajoute Nadia qu’une seule fois et s’arrête en cas de collision d’identifiant ou d’e-mail. Ces identifiants sont réservés à la démonstration, jamais à un environnement de production.
 
 ## Architecture
 
