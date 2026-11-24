@@ -23,6 +23,7 @@ export const FilePlus2 = make(<><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v5h5M
 export const FolderKanban = make(<><path d="M3 6h7l2 2h9v11H3z" /><path d="M8 12h3v4H8zM14 12h3v2h-3z" /></>)
 export const FolderPlus = make(<><path d="M3 6h7l2 2h9v11H3z" /><path d="M12 12v5M9.5 14.5h5" /></>)
 export const Github = make(<><path d="M15 20v-3.5a3 3 0 0 0-.8-2.1c2.7-.3 5.5-1.3 5.5-6a4.7 4.7 0 0 0-1.3-3.3A4.3 4.3 0 0 0 18.3 2S17.2 1.7 15 3.2a11.8 11.8 0 0 0-6 0C6.8 1.7 5.7 2 5.7 2a4.3 4.3 0 0 0-.1 3.1 4.7 4.7 0 0 0-1.3 3.3c0 4.7 2.8 5.7 5.5 6a3 3 0 0 0-.8 2.1V20" /><path d="M9 19c-3 .9-3-1.5-4.2-1.9" /></>)
+export const GraduationCap = make(<><path d="m2 10 10-5 10 5-10 5L2 10Z" /><path d="M6 12.2V16c2.9 2.1 9.1 2.1 12 0v-3.8M22 10v6" /></>)
 export const Heart = (props) => <Icon {...props} overflow="visible"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 20.17l7.78-7.78a5.5 5.5 0 0 0 0-7.78Z" /></Icon>
 export const House = make(<><path d="m3 11 9-8 9 8" /><path d="M5 10v10h14V10M10 20v-6h4v6" /></>)
 export const LayoutDashboard = make(<><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></>)

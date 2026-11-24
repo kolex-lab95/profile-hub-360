@@ -17,7 +17,7 @@ describe('authentication helpers', () => {
   it('creates compatible candidate and recruiter payloads without leaking a company to a candidate', () => {
     const candidate = accountFromSignup({ name: 'Lina Bâ', email: ' LINA@EXAMPLE.COM ', password: 'secret1', role: 'student', company: 'Saisie conservée' }, 'student-1')
     const recruiter = accountFromSignup({ name: 'Nora Blanc', email: 'nora@example.com', password: 'secret1', role: 'recruiter', company: ' NovaLabs ' }, 'recruiter-1')
-    expect(candidate).toMatchObject({ id: 'student-1', name: 'Lina Bâ', email: 'lina@example.com', role: 'student', avatar: 'LB', accent: 'coral', availability: 'Disponible' })
+    expect(candidate).toMatchObject({ id: 'student-1', name: 'Lina Bâ', email: 'lina@example.com', role: 'student', title: 'Étudiant·e en construction de portfolio', avatar: 'LB', accent: 'coral', availability: 'Disponible' })
     expect(candidate).not.toHaveProperty('company')
     expect(recruiter).toMatchObject({ role: 'recruiter', title: 'Recruteur·se', accent: 'blue', availability: '', company: 'NovaLabs' })
   })
