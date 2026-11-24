@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { accountFromSignup, emailIsAvailable, matchingAccount } from './authentication'
+import { accountFromSignup, dashboardPathForRole, emailIsAvailable, matchingAccount, signupValidationError } from './authentication'
 
 describe('authentication helpers', () => {
   const users = [{ id: 'candidate', email: 'amel@portfolio.test', password: 'secret1', role: 'student' }]
@@ -14,8 +14,22 @@ describe('authentication helpers', () => {
     expect(emailIsAvailable(users, ' new@portfolio.test ')).toBe(true)
   })
 
-  it('creates the same compatible candidate and recruiter payloads from the public form', () => {
-    expect(accountFromSignup({ name: 'Lina Bâ', email: ' LINA@EXAMPLE.COM ', password: 'secret1', role: 'student' }, 'student-1')).toMatchObject({ id: 'student-1', name: 'Lina Bâ', email: 'lina@example.com', role: 'student', avatar: 'LB', accent: 'coral', availability: 'Disponible' })
-    expect(accountFromSignup({ name: 'Nora Blanc', email: 'nora@example.com', password: 'secret1', role: 'recruiter' }, 'recruiter-1')).toMatchObject({ role: 'recruiter', title: 'Recruteur·se', accent: 'blue', availability: '' })
+  it('creates compatible candidate and recruiter payloads without leaking a company to a candidate', () => {
+    const candidate = accountFromSignup({ name: 'Lina Bâ', email: ' LINA@EXAMPLE.COM ', password: 'secret1', role: 'student', company: 'Saisie conservée' }, 'student-1')
+    const recruiter = accountFromSignup({ name: 'Nora Blanc', email: 'nora@example.com', password: 'secret1', role: 'recruiter', company: ' NovaLabs ' }, 'recruiter-1')
+    expect(candidate).toMatchObject({ id: 'student-1', name: 'Lina Bâ', email: 'lina@example.com', role: 'student', avatar: 'LB', accent: 'coral', availability: 'Disponible' })
+    expect(candidate).not.toHaveProperty('company')
+    expect(recruiter).toMatchObject({ role: 'recruiter', title: 'Recruteur·se', accent: 'blue', availability: '', company: 'NovaLabs' })
+  })
+
+  it('validates the company only for a recruiter and redirects from the persisted account role', () => {
+    const candidate = { name: 'Lina Bâ', email: 'lina@example.com', password: 'secret1', role: 'student', company: '' }
+    const recruiter = { ...candidate, role: 'recruiter' }
+    expect(signupValidationError(users, candidate)).toBe('')
+    expect(signupValidationError(users, recruiter)).toBe('Indiquez le nom de votre entreprise.')
+    expect(signupValidationError(users, { ...recruiter, company: 'NovaLabs' })).toBe('')
+    expect(dashboardPathForRole('student')).toBe('/etudiant')
+    expect(dashboardPathForRole('recruiter')).toBe('/recruteur')
+    expect(dashboardPathForRole('unknown')).toBe('/')
   })
 })
