@@ -2,20 +2,24 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, Building2, MessageCircle, Send, X } from './icons'
 import { useApp } from '../context/AppContext'
+import { useTranslation } from '../i18n/I18n'
 import { api } from '../services/api'
 import { conversationPartner, messagesForConversation, unreadCount } from '../utils/messaging'
 
-const timeFormat = new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', minute: '2-digit' })
-const dayFormat = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'short' })
-
-function conversationDate(value) {
+function conversationDate(value, locale) {
   if (!value) return ''
   const date = new Date(value)
   const today = new Date()
-  return date.toDateString() === today.toDateString() ? timeFormat.format(date) : dayFormat.format(date)
+  const format = date.toDateString() === today.toDateString()
+    ? new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' })
+    : new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' })
+  return format.format(date)
 }
 
 export function MessagesPage() {
+  const { locale } = useTranslation()
+  const timeFormat = useMemo(() => new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }), [locale])
+  const dayFormat = useMemo(() => new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }), [locale])
   const { conversationId } = useParams()
   const navigate = useNavigate()
   const { user, users, conversations, messages, mutate, markConversationRead } = useApp()
@@ -60,7 +64,7 @@ export function MessagesPage() {
         const last = thread.at(-1)
         const unread = unreadCount(messages, conversations, user.id, conversation.id)
         return <Link key={conversation.id} to={`/messages/${conversation.id}`} className={`conversation-row ${conversation.id === activeId ? 'active' : ''}`}>
-          <span className={`avatar avatar-${correspondent?.accent}`}>{correspondent?.avatar}</span><span className="conversation-row-main"><strong>{correspondent?.name}</strong><small>{last?.body || 'Nouvelle conversation'}</small></span><span className="conversation-row-meta"><time>{conversationDate(last?.createdAt || conversation.lastMessageAt)}</time>{unread > 0 && <b aria-label={`${unread} messages non lus`}>{unread}</b>}</span>
+          <span className={`avatar avatar-${correspondent?.accent}`}>{correspondent?.avatar}</span><span className="conversation-row-main"><strong>{correspondent?.name}</strong><small>{last?.body || 'Nouvelle conversation'}</small></span><span className="conversation-row-meta"><time>{conversationDate(last?.createdAt || conversation.lastMessageAt, locale)}</time>{unread > 0 && <b aria-label={`${unread} messages non lus`}>{unread}</b>}</span>
         </Link>
       })}</div> : <div className="message-empty small"><MessageCircle size={23} /><p>Vos prochaines conversations apparaîtront ici.</p></div>}
     </aside>

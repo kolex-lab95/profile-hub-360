@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { dailyVisibility, matchScore, recentStudentActivity, relativeDateFr, studentMetrics, topProjectsByViews, validStudentViews } from './analytics'
+import { dailyVisibility, matchScore, recentStudentActivity, relativeDate, relativeDateFr, studentMetrics, topProjectsByViews, validStudentViews } from './analytics'
 
 const users = [
   { id: 'student', role: 'student', name: 'Élise Martin', avatar: 'ÉM', accent: 'coral' },
@@ -173,6 +173,13 @@ describe('project ranking and recent activity', () => {
     expect(relativeDateFr('2026-05-09T12:00:00.000Z', now, { timeZone: 'UTC' })).toBe('Hier')
     expect(relativeDateFr('2026-05-05T12:00:00.000Z', now, { timeZone: 'UTC' })).toBe('Il y a 5 jours')
     expect(relativeDateFr('2026-05-01T12:00:00.000Z', now, { timeZone: 'UTC' })).toBe('1 mai 2026')
+  })
+
+  it('uses English relative time and date labels when requested', () => {
+    const now = '2026-05-10T12:00:00.000Z'
+    expect(relativeDate('2026-05-10T11:55:00.000Z', now, { timeZone: 'UTC', locale: 'en-US' })).toBe('5 minutes ago')
+    expect(relativeDate('2026-05-09T12:00:00.000Z', now, { timeZone: 'UTC', locale: 'en-US' })).toBe('Yesterday')
+    expect(relativeDate('2026-05-01T12:00:00.000Z', now, { timeZone: 'UTC', locale: 'en-US' })).toBe('May 1, 2026')
   })
 })
 

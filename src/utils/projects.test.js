@@ -12,6 +12,8 @@ describe('project summary', () => {
     expect(projectSummary(projects, 'student')).toEqual({ total: 3, published: 2, drafts: 1 })
     expect(projectSummaryLabel(projectSummary(projects, 'student'))).toBe('3 projets · 2 publiés · 1 brouillon')
     expect(projectSummaryLabel({ total: 1, published: 1, drafts: 0 })).toBe('1 projet · 1 publié · 0 brouillons')
+    expect(projectSummaryLabel({ total: 1, published: 1, drafts: 0 }, 'en-US')).toBe('1 project · 1 published project · 0 drafts')
+    expect(projectSummaryLabel({ total: 2, published: 1, drafts: 1 }, 'en-US')).toBe('2 projects · 1 published project · 1 draft')
   })
 })
 

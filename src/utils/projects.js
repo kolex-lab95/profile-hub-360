@@ -4,7 +4,11 @@ export function projectSummary(projects, ownerId) {
   return { total: ownProjects.length, published, drafts: ownProjects.length - published }
 }
 
-export function projectSummaryLabel({ total, published, drafts }) {
+export function projectSummaryLabel({ total, published, drafts }, locale = 'fr-FR') {
+  if (locale.startsWith('en')) {
+    const word = (count, singular, plural) => `${count} ${count === 1 ? singular : plural}`
+    return `${word(total, 'project', 'projects')} · ${word(published, 'published project', 'published projects')} · ${word(drafts, 'draft', 'drafts')}`
+  }
   const word = (count, singular, plural) => `${count} ${count === 1 ? singular : plural}`
   return `${word(total, 'projet', 'projets')} · ${word(published, 'publié', 'publiés')} · ${word(drafts, 'brouillon', 'brouillons')}`
 }

@@ -41,8 +41,8 @@ function dayIndex(key) {
   return Math.floor(Date.UTC(year, month - 1, day) / DAY_MS)
 }
 
-function displayDayLabel(parts, timeZone) {
-  const month = new Intl.DateTimeFormat('fr-FR', { month: 'short', timeZone: timeZoneOrDefault(timeZone) })
+function displayDayLabel(parts, timeZone, locale = 'fr-FR') {
+  const month = new Intl.DateTimeFormat(locale, { month: 'short', timeZone: timeZoneOrDefault(timeZone) })
     .format(new Date(Date.UTC(parts.year, parts.month - 1, 15, 12)))
     .replace('.', '')
   return `${parts.day} ${month}`
@@ -55,8 +55,8 @@ function startOfUtcWeek(value) {
   return date
 }
 
-function percentageChange(current, previous) {
-  if (!previous) return current ? 'Nouveau' : '—'
+function percentageChange(current, previous, locale = 'fr-FR') {
+  if (!previous) return current ? (locale.startsWith('fr') ? 'Nouveau' : 'New') : '—'
   const percent = Math.round(((current - previous) / previous) * 100)
   return `${percent > 0 ? '+' : ''}${percent} %`
 }
@@ -88,7 +88,7 @@ export function validStudentViews(views, projects, studentId, { now = new Date()
   })
 }
 
-export function dailyVisibility(views, projects, studentId, { now = new Date(), users = [], timeZone } = {}) {
+export function dailyVisibility(views, projects, studentId, { now = new Date(), users = [], timeZone, locale = 'fr-FR' } = {}) {
   const referenceDate = validDate(now) || new Date()
   const activeTimeZone = timeZoneOrDefault(timeZone)
   const today = dateParts(referenceDate, activeTimeZone)
@@ -104,11 +104,11 @@ export function dailyVisibility(views, projects, studentId, { now = new Date(), 
   return slots.map((slot, index) => ({
     key: slot.key,
     total: slot.total,
-    label: index % 2 === 0 || index === 13 ? displayDayLabel(slot.parts, activeTimeZone) : '',
+    label: index % 2 === 0 || index === 13 ? displayDayLabel(slot.parts, activeTimeZone, locale) : '',
   }))
 }
 
-export function relativeDateFr(value, now = new Date(), { timeZone } = {}) {
+export function relativeDate(value, now = new Date(), { timeZone, locale = 'fr-FR' } = {}) {
   const date = validDate(value)
   const referenceDate = validDate(now)
   if (!date || !referenceDate) return ''
@@ -116,21 +116,27 @@ export function relativeDateFr(value, now = new Date(), { timeZone } = {}) {
   const eventDay = dayKey(date, timeZone)
   const today = dayKey(referenceDate, timeZone)
   const calendarDifference = dayIndex(today) - dayIndex(eventDay)
-  if (calendarDifference === 1) return 'Hier'
-  if (calendarDifference === 0 && diff < 2 * 60 * 1000) return 'À l’instant'
+  const french = locale.startsWith('fr')
+  if (calendarDifference === 1) return french ? 'Hier' : 'Yesterday'
+  if (calendarDifference === 0 && diff < 2 * 60 * 1000) return french ? 'À l’instant' : 'Just now'
   if (calendarDifference === 0 && diff < 60 * 60 * 1000) {
     const minutes = Math.max(2, Math.floor(diff / (60 * 1000)))
-    return `Il y a ${minutes} minutes`
+    return french ? `Il y a ${minutes} minutes` : `${minutes} minute${minutes === 1 ? '' : 's'} ago`
   }
   if (calendarDifference === 0 && diff < DAY_MS) {
     const hours = Math.max(1, Math.floor(diff / (60 * 60 * 1000)))
-    return `Il y a ${hours} heure${hours > 1 ? 's' : ''}`
+    return french ? `Il y a ${hours} heure${hours > 1 ? 's' : ''}` : `${hours} hour${hours === 1 ? '' : 's'} ago`
   }
-  if (calendarDifference > 1 && calendarDifference <= 6) return `Il y a ${calendarDifference} jours`
-  return new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', timeZone: timeZoneOrDefault(timeZone) }).format(date)
+  if (calendarDifference > 1 && calendarDifference <= 6) return french ? `Il y a ${calendarDifference} jours` : `${calendarDifference} days ago`
+  return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric', timeZone: timeZoneOrDefault(timeZone) }).format(date)
 }
 
-export function recentStudentActivity(views, projects, studentId, { now = new Date(), users = [], timeZone } = {}) {
+// Compatibility entry point retained for existing French callers.
+export function relativeDateFr(value, now = new Date(), options = {}) {
+  return relativeDate(value, now, { ...options, locale: 'fr-FR' })
+}
+
+export function recentStudentActivity(views, projects, studentId, { now = new Date(), users = [], timeZone, locale = 'fr-FR' } = {}) {
   return validStudentViews(views, projects, studentId, { now, users })
     .sort((a, b) => new Date(b.viewedAt) - new Date(a.viewedAt) || String(a.id || '').localeCompare(String(b.id || '')))
     .slice(0, 5)
@@ -144,7 +150,7 @@ export function recentStudentActivity(views, projects, studentId, { now = new Da
         type: project ? 'project' : 'profile',
         projectTitle: project?.title || null,
         viewedAt: view.viewedAt,
-        relativeDate: relativeDateFr(view.viewedAt, now, { timeZone }),
+        relativeDate: relativeDate(view.viewedAt, now, { timeZone, locale }),
       }
     })
 }
@@ -156,7 +162,7 @@ export function topProjectsByViews(projects, limit = 5) {
     .slice(0, limit)
 }
 
-export function studentMetrics(views, projects, studentId, { now = new Date(), users = [], timeZone } = {}) {
+export function studentMetrics(views, projects, studentId, { now = new Date(), users = [], timeZone, locale = 'fr-FR' } = {}) {
   const referenceDate = validDate(now) || new Date()
   const ownProjects = projects.filter((project) => project.ownerId === studentId)
   const validViews = validStudentViews(views, projects, studentId, { now: referenceDate, users })
@@ -187,7 +193,7 @@ export function studentMetrics(views, projects, studentId, { now = new Date(), u
   const previousProjectViews = projectViews.filter((view) => inRange(view, previousPeriodStart, currentPeriodStart)).length
   const currentVisibility = currentProfileViews + currentProjectViews
   const previousVisibility = previousProfileViews + previousProjectViews
-  const daily = dailyVisibility(views, projects, studentId, { now: referenceDate, users, timeZone })
+  const daily = dailyVisibility(views, projects, studentId, { now: referenceDate, users, timeZone, locale })
 
   return {
     published: ownProjects.filter((project) => project.published).length,
@@ -202,8 +208,8 @@ export function studentMetrics(views, projects, studentId, { now = new Date(), u
     daily,
     dailyTotal: daily.reduce((total, day) => total + day.total, 0),
     visibilityComparison: { current: currentVisibility, previous: previousVisibility },
-    profileTrend: percentageChange(currentProfileViews, previousProfileViews),
-    projectTrend: percentageChange(currentProjectViews, previousProjectViews),
+    profileTrend: percentageChange(currentProfileViews, previousProfileViews, locale),
+    projectTrend: percentageChange(currentProjectViews, previousProjectViews, locale),
   }
 }
 

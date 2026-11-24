@@ -1,6 +1,11 @@
 import { jsPDF } from 'jspdf'
 
-export function exportPortfolioPDF(student, projects) {
+export const portfolioPdfLabels = (locale) => locale?.startsWith('en') ? {
+  profile: 'Profile', skills: 'Skills', projects: 'Selected projects', filename: 'portfolio',
+} : { profile: 'Profil', skills: 'Compétences', projects: 'Projets sélectionnés', filename: 'portfolio' }
+
+export function exportPortfolioPDF(student, projects, { locale = 'fr-FR' } = {}) {
+  const labels = portfolioPdfLabels(locale)
   const pdf = new jsPDF({ unit: 'mm', format: 'a4' })
   const width = pdf.internal.pageSize.getWidth()
   let y = 22
@@ -18,7 +23,7 @@ export function exportPortfolioPDF(student, projects) {
   pdf.setTextColor(25, 35, 52)
   pdf.setFont('helvetica', 'bold')
   pdf.setFontSize(13)
-  pdf.text('Profil', 16, y)
+  pdf.text(labels.profile, 16, y)
   pdf.setFont('helvetica', 'normal')
   pdf.setFontSize(10.5)
   const bio = pdf.splitTextToSize(student.bio, width - 32)
@@ -26,14 +31,14 @@ export function exportPortfolioPDF(student, projects) {
   y += 16 + bio.length * 5
   pdf.setFont('helvetica', 'bold')
   pdf.setFontSize(13)
-  pdf.text('Compétences', 16, y)
+  pdf.text(labels.skills, 16, y)
   pdf.setFont('helvetica', 'normal')
   pdf.setFontSize(10.5)
   pdf.text(student.skills.join('  ·  '), 16, y + 7)
   y += 20
   pdf.setFont('helvetica', 'bold')
   pdf.setFontSize(13)
-  pdf.text('Projets sélectionnés', 16, y)
+  pdf.text(labels.projects, 16, y)
   y += 8
   projects.filter((project) => project.published).forEach((project, index) => {
     const description = pdf.splitTextToSize(project.description, width - 32)
@@ -54,5 +59,5 @@ export function exportPortfolioPDF(student, projects) {
     pdf.text(`${project.category} · ${project.technologies.join(', ')}`, 18, y + 12 + description.length * 4.5)
     y += required + 6
   })
-  pdf.save(`portfolio-${student.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.pdf`)
+  pdf.save(`${labels.filename}-${student.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.pdf`)
 }
