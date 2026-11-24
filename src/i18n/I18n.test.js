@@ -14,6 +14,10 @@ describe('i18n resources', () => {
     expect(messages.en.roles.recruiter).toBe('Recruiter')
     expect(messages.en.auth.invalidCredentials).toBe('Incorrect email address or password.')
   })
+  it('provides public-header labels in both languages', () => {
+    expect(messages.fr.public).toEqual({ signIn: 'Connexion', dashboard: 'Tableau de bord' })
+    expect(messages.en.public).toEqual({ signIn: 'Sign in', dashboard: 'Dashboard' })
+  })
   it('handles singular and plural labels', () => {
     expect(plural(1, 'project', 'projects')).toBe('1 project')
     expect(plural(2, 'project', 'projects')).toBe('2 projects')

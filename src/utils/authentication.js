@@ -20,6 +20,12 @@ export function dashboardPathForRole(role) {
   return '/'
 }
 
+export function publicHeaderAction(user) {
+  return user
+    ? { path: dashboardPathForRole(user.role), labelKey: 'public.dashboard' }
+    : { path: '/connexion', labelKey: 'public.signIn' }
+}
+
 export function accountFromSignup(form, id) {
   const initials = form.name.trim().split(/\s+/).map((item) => item[0]).join('').slice(0, 2).toUpperCase() || 'PH'
   const role = form.role === 'recruiter' ? 'recruiter' : 'student'

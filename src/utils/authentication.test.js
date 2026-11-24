@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { accountFromSignup, dashboardPathForRole, emailIsAvailable, matchingAccount, signupValidationError } from './authentication'
+import { accountFromSignup, dashboardPathForRole, emailIsAvailable, matchingAccount, publicHeaderAction, signupValidationError } from './authentication'
 
 describe('authentication helpers', () => {
   const users = [{ id: 'candidate', email: 'amel@portfolio.test', password: 'secret1', role: 'student' }]
@@ -31,5 +31,11 @@ describe('authentication helpers', () => {
     expect(dashboardPathForRole('student')).toBe('/etudiant')
     expect(dashboardPathForRole('recruiter')).toBe('/recruteur')
     expect(dashboardPathForRole('unknown')).toBe('/')
+  })
+
+  it('keeps the public-header action aligned with the visitor or signed-in role', () => {
+    expect(publicHeaderAction(null)).toEqual({ path: '/connexion', labelKey: 'public.signIn' })
+    expect(publicHeaderAction({ role: 'student' })).toEqual({ path: '/etudiant', labelKey: 'public.dashboard' })
+    expect(publicHeaderAction({ role: 'recruiter' })).toEqual({ path: '/recruteur', labelKey: 'public.dashboard' })
   })
 })
