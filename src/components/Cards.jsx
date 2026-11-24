@@ -6,15 +6,15 @@ export function ProjectVisual({ visual = 'violet', title = '' }) {
   return <div className={`project-visual visual-${visual}`} aria-hidden="true"><span className="visual-orb one" /><span className="visual-orb two" /><span className="visual-panel" /><span className="visual-label">{title.slice(0, 2).toUpperCase() || 'PH'}</span></div>
 }
 
-export function ProjectCard({ project, owner, views = 0, favorite, onFavorite, editable = false, onDelete }) {
+export function ProjectCard({ project, owner, views = 0, favorite, onFavorite, editable = false, onDelete, ownerLink = true, illustrative = false, projectLink = true }) {
   return <article className="project-card">
     <ProjectVisual visual={project.visual} title={project.title} />
     <div className="project-card-body">
       <div className="project-card-top"><span className="tag muted">{project.category}</span>{editable ? <span className={`tag ${project.published ? 'accent' : 'muted'}`}>{project.published ? 'Publié' : 'Brouillon'}</span> : onFavorite && <button className={`icon-button ${favorite ? 'saved' : ''}`} onClick={onFavorite} aria-label="Ajouter aux favoris"><Bookmark size={18} fill={favorite ? 'currentColor' : 'none'} /></button>}</div>
-      <Link to={`/projets/${project.id}`}><h3>{project.title}</h3></Link>
+      {projectLink ? <Link to={`/projets/${project.id}`}><h3>{project.title}</h3></Link> : <h3>{project.title}</h3>}
       <p>{project.description}</p>
       <div className="tech-list">{project.technologies.slice(0, 3).map((technology) => <span key={technology}>{technology}</span>)}</div>
-      <div className="project-card-footer">{owner && <Link className="owner-line" to={`/profils/${owner.id}`}><span className={`mini-avatar avatar-${owner.accent}`}>{owner.avatar}</span>{owner.name}</Link>}<span className="view-count"><Eye size={15} />{views}</span></div>
+      <div className="project-card-footer">{owner && (ownerLink ? <Link className="owner-line" to={`/profils/${owner.id}`}><span className={`mini-avatar avatar-${owner.accent}`}>{owner.avatar}</span>{owner.name}</Link> : <span className="owner-line"><span className={`mini-avatar avatar-${owner.accent}`}>{owner.avatar}</span>{owner.name}</span>)}{illustrative ? <span className="view-count"><Sparkles size={15} />Exemple</span> : <span className="view-count"><Eye size={15} />{views}</span>}</div>
       {editable && <div className="card-actions"><Link to={`/etudiant/projets/${project.id}/modifier`} className="button compact secondary">Modifier</Link><button className="button compact danger-quiet" onClick={onDelete}>Supprimer</button></div>}
     </div>
   </article>
