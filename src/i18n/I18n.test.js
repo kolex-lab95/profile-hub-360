@@ -18,6 +18,10 @@ describe('i18n resources', () => {
     expect(messages.fr.public.signIn).toBe('Connexion')
     expect(messages.en.public.signIn).toBe('Sign in')
   })
+  it('provides the sign-up confirmation in both languages', () => {
+    expect(messages.fr.signup.created).toBe('Compte créé avec succès. Connectez-vous pour accéder à votre espace.')
+    expect(messages.en.signup.created).toBe('Account created successfully. Sign in to access your workspace.')
+  })
   it('handles singular and plural labels', () => {
     expect(plural(1, 'project', 'projects')).toBe('1 project')
     expect(plural(2, 'project', 'projects')).toBe('2 projects')
