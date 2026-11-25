@@ -24,7 +24,7 @@ export function AppProvider({ children }) {
       setData({ users, projects, views, favorites, recentProfiles, conversations, messages })
       setError('')
       setStatus('ready')
-    } catch (err) {
+    } catch {
       if (!silent) {
         setError('Impossible de joindre l’API de démonstration. Lancez « npm run dev » afin de démarrer Vite et json-server.')
         setStatus('error')
@@ -108,7 +108,7 @@ export function AppProvider({ children }) {
       const nextMessages = markConversationMessagesRead(data.messages, data.conversations, user.id, conversation.id)
       await Promise.all(unread.map((message) => api.update('messages', message.id, nextMessages.find((item) => item.id === message.id))))
       await refresh({ silent: true })
-    } catch (err) { flash('Impossible de mettre à jour la lecture des messages.', 'error') }
+    } catch { flash('Impossible de mettre à jour la lecture des messages.', 'error') }
   }
 
   const value = useMemo(() => ({ ...data, status, error, user, theme, notice, login, logout, setTheme, refresh, flash, mutate, createFavorite, removeFavorite, updateCurrentUser, getOrCreateConversation, markConversationRead }), [data, status, error, user, theme, notice, refresh])

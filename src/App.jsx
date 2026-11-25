@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { ArrowRight, BarChart3, Bookmark, BriefcaseBusiness, CheckCircle2, ChevronRight, CircleAlert, Code2, Compass, Download, ExternalLink, Eye, FilePlus2, FolderPlus, Github, GraduationCap, Heart, LayoutDashboard, MapPin, Menu, Plus, Search, ShieldAlert, SlidersHorizontal, Sparkles, Trash2, UserRound, UsersRound, X } from './components/icons'
+import { ArrowRight, BarChart3, Bookmark, BriefcaseBusiness, CheckCircle2, ChevronRight, CircleAlert, Compass, Download, ExternalLink, Eye, FolderPlus, Github, GraduationCap, Heart, MapPin, Plus, Search, ShieldAlert, Sparkles, Trash2, UserRound, UsersRound, X } from './components/icons'
 import { useApp } from './context/AppContext'
 import { api } from './services/api'
 import { exportPortfolioPDF } from './utils/exportPortfolio'
@@ -112,7 +112,7 @@ function ProjectEditor() {
     const projectId = existing?.id || `p-${crypto.randomUUID()}`
     const needsCoverStorage = form.visual === 'custom' && Boolean(form.coverFile)
     const coverId = form.visual === 'custom' ? (needsCoverStorage ? `cover-${projectId}-${crypto.randomUUID()}` : existing?.coverId) : null
-    const { coverFile, coverPreviewUrl, ...projectFields } = form
+    const { coverFile, coverPreviewUrl: _coverPreviewUrl, ...projectFields } = form
     const payload = { ...projectFields, coverId, technologies: form.technologies.split(',').map((item) => item.trim()).filter(Boolean), ownerId: user.id, updatedAt: timestamp, ...publicationFields(existing, form.published, timestamp), ...(existing ? {} : { id: projectId, createdAt: timestamp }) }
     let storedCoverId = ''
     try {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ArrowUpRight, Bookmark, Code2, Eye, Heart, MapPin, MoreHorizontal, Sparkles } from './icons'
+import { ArrowUpRight, Bookmark, Code2, Eye, Heart, MapPin, Sparkles } from './icons'
 import { Link } from 'react-router-dom'
 import { availabilityLabel, isAvailable } from '../utils/profile'
 import { loadCustomCover } from '../utils/projectCovers'
